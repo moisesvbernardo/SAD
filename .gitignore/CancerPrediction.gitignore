@@ -1,0 +1,76 @@
+from sklearn.datasets import load_breast_cancer
+cancer = load_breast_cancer()
+print("cancer.keys(): \n{}".format(cancer.keys()))
+
+X = cancer.data
+y = cancer.target
+
+from sklearn.linear_model import LogisticRegression
+
+logreg = LogisticRegression()
+
+logreg.fit(X, y)
+
+logreg.predict(X)
+
+y_pred = logreg.predict(X)
+len(y_pred)
+
+from sklearn import metrics
+print(metrics.accuracy_score(y, y_pred))
+
+from sklearn.neighbors import KNeighborsClassifier
+knn = KNeighborsClassifier(n_neighbors=1)
+knn.fit(X, y)
+y_pred = knn.predict(X)
+print(metrics.accuracy_score(y, y_pred))
+
+from sklearn.neighbors import KNeighborsClassifier
+knn = KNeighborsClassifier(n_neighbors=5)
+knn.fit(X, y)
+y_pred = knn.predict(X)
+print(metrics.accuracy_score(y, y_pred))
+
+print(X.shape)
+print(y.shape)
+
+from sklearn.cross_validation import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.4, random_state=4)
+
+print(X_train.shape)
+print(X_test.shape)
+
+print(y_train.shape)
+print(y_test.shape)
+
+logreg = LogisticRegression()
+logreg.fit(X_train, y_train)
+
+y_pred = logreg.predict(X_test)
+print(metrics.accuracy_score(y_test, y_pred))
+
+knn = KNeighborsClassifier(n_neighbors=1)
+knn.fit(X_train, y_train)
+y_pred = knn.predict(X_test)
+print(metrics.accuracy_score(y_test, y_pred))
+
+knn = KNeighborsClassifier(n_neighbors=5)
+knn.fit(X_train, y_train)
+y_pred = knn.predict(X_test)
+print(metrics.accuracy_score(y_test, y_pred))
+
+k_range = list(range(1,26))
+scores = []
+for k in k_range:
+    knn = KNeighborsClassifier(n_neighbors=k)
+    knn.fit(X_train, y_train)
+    y_pred = knn.predict(X_test)
+    scores.append(metrics.accuracy_score(y_test, y_pred)) 
+    
+import matplotlib.pyplot as plt
+
+%matplotlib inline
+
+plt.plot(k_range, scores)
+plt.xlabel('Value of K for KNN')
+plt.ylabel('Testing Accuracy')
